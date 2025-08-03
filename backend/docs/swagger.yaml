@@ -1,0 +1,266 @@
+basePath: /api
+definitions:
+  models.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.CreateUserRequest:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.SignupRequest:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  models.UpdateUserRequest:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: A simple CRUD API built with Go and PostgreSQL
+  title: Go CRUD API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user with email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: User login
+      tags:
+      - Authentication
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: User registration
+      tags:
+      - Authentication
+  /users:
+    get:
+      description: Retrieves a list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user with the provided information
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create a new user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Deletes a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete user
+      tags:
+      - Users
+    get:
+      description: Retrieves a specific user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get user by ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing user's information
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User update data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update user
+      tags:
+      - Users
+swagger: "2.0"
