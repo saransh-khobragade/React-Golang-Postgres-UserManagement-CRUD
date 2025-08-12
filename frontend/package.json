@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port ${FRONTEND_PORT:-5173}",
-    "dev:backend": "BACKEND_PORT=${BACKEND_PORT:-8080} vite --port ${FRONTEND_PORT:-5173}",
+    "dev": "vite --port ${FRONTEND_PORT:-3000}",
+    "dev:backend": "BACKEND_PORT=${BACKEND_PORT:-8080} vite --port ${FRONTEND_PORT:-3000}",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

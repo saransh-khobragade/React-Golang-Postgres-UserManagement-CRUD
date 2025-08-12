@@ -10,19 +10,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d test_db"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+      start_period: 20s
 
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: backend
     ports:
@@ -47,6 +47,20 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - network
+    environment:
+      - VITE_API_URL=http://localhost:8080
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -64,7 +78,7 @@ services:
       - network
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-      - ./pgadmin-servers.json:/pgadmin4/servers.json:ro
+      - ./database/pgadmin-servers.json:/pgadmin4/servers.json:ro
     command: >
       sh -c "
         echo 'Waiting for postgres to be ready...' &&
@@ -72,7 +86,6 @@ services:
         echo 'Postgres is ready!' &&
         /entrypoint.sh
       "
-
 volumes:
   postgres_data:
   pgadmin_data:

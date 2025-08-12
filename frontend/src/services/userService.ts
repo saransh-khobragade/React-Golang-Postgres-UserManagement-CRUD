@@ -6,9 +6,9 @@ interface ApiUser {
   name: string;
   email: string;
   age?: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 interface ApiResponse<T> {
@@ -23,10 +23,10 @@ const convertApiUser = (apiUser: ApiUser): User => ({
   id: String(apiUser.id),
   name: apiUser.name,
   email: apiUser.email,
-  isActive: apiUser.isActive,
+  isActive: apiUser.is_active,
   ...(apiUser.age !== undefined && { age: apiUser.age }),
-  createdAt: apiUser.createdAt,
-  updatedAt: apiUser.updatedAt,
+  createdAt: apiUser.created_at,
+  updatedAt: apiUser.created_at,
 });
 
 const getUsers = async (): Promise<User[]> => {

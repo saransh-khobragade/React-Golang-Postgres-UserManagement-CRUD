@@ -12,7 +12,8 @@ const getBackendPort = (): number => {
 // https://vite.dev/config/
 export default defineConfig(() => {
   const backendPort = getBackendPort();
-  const frontendPort = 5173; // Always use 5173 for frontend
+  const envPort = process.env['FRONTEND_PORT'];
+  const frontendPort = envPort !== undefined && envPort !== '' ? parseInt(envPort, 10) : 3000;
 
   return {
     plugins: [react(), tailwindcss()],
@@ -24,7 +25,7 @@ export default defineConfig(() => {
     server: {
       port: frontendPort,
       host: true,
-      strictPort: true, // Fail if port is already in use
+      strictPort: true,
     },
     define: {
       // Make backend port available to the application

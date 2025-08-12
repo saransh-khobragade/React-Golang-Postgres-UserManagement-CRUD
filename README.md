@@ -1,38 +1,83 @@
-# React-Go-UserManagement-CRUD
+# React + NestJS + Postgres (CRUD)
 
-A full-stack authentication and user management application built with React, Go, and PostgreSQL.
+Full‑stack user management app with React (frontend), NestJS (backend), and Postgres.
 
-## 🚀 Quick Start
-
-### 1. Start Backend Services
+## 🚀 Quick start (Docker)
 
 ```bash
-cd backend
-# just want to start backend local
-./gradlew bootRun
-./scripts/start.sh --postgres-only 
-./scripts/start.sh --pgadmin-only 
+# Build and start selected services (or use "all")
+./scripts/build.sh all
 
+# Or only app core
+./scripts/build.sh frontend backend postgres pgadmin
 
-# Start all services (recommended for first time)
-./scripts/start.sh
+## Services
 
-# Or start specific services
-./scripts/start.sh --backend-only     # Only Go API
-./scripts/start.sh --postgres-only    # Only database
-./scripts/start.sh --pgadmin-only     # Only pgAdmin
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
+- Swagger: http://localhost:8080/api
+- pgAdmin: http://localhost:5050 (admin@admin.com / admin)
 ```
 
-### 2. Start Frontend
+To start everything:
+
+```bash
+./scripts/build.sh all
+```
+
+## ♻️ Rebuild workflow
+
+Use a single script with two modes:
+
+```bash
+# For config/env updates → SOFT (no image build)
+./scripts/rebuild.sh <service|all> soft
+
+# For code/Dockerfile changes → HARD (rebuild image)
+./scripts/rebuild.sh <service|all> hard
+```
+
+Examples:
+
+```bash
+# After backend code edits
+./scripts/rebuild.sh backend hard
+
+# Recreate frontend to pick up env/static content changes
+./scripts/rebuild.sh frontend soft
+```
+
+Supported services: `frontend backend postgres pgadmin`. Use `all` for everything.
+
+## Database access
+
+pgAdmin is included for DB administration at http://localhost:5050 (default: admin@admin.com / admin). Default Postgres connection inside Docker uses host `postgres`, port `5432`.
+
+## 🧑‍💻 Local frontend dev
 
 ```bash
 cd frontend
-yarn dev
+yarn install
+yarn dev   # http://localhost:3000
 ```
 
-### 3. Access the Application
+## 🧑‍💻 Local frontend dev
 
-- **Frontend**: http://localhost:5173
-- **API**: http://localhost:8080
-- **API Docs**: http://localhost:8080/api
-- **pgAdmin**: http://localhost:5050 (database password : password) 
+```bash
+cd backend
+yarn install
+yarn start   # http://localhost:8080
+```
+
+## 🔧 Useful commands
+
+```bash
+# Tail service logs
+docker compose logs -f backend
+
+# Run simple API smoke tests
+./scripts/test-api.sh.sh
+
+# Health-check API
+curl -s http://localhost:8080/api | jq .
+```
