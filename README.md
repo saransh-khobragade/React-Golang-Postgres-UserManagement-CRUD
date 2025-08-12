@@ -1,6 +1,6 @@
-# React + NestJS + Postgres (CRUD)
+# React + Golang + Postgres (CRUD)
 
-Full‑stack user management app with React (frontend), NestJS (backend), and Postgres.
+Full‑stack user management app with React (frontend), Golang (backend), and Postgres.
 
 ## 🚀 Quick start (Docker)
 
@@ -65,8 +65,7 @@ yarn dev   # http://localhost:3000
 
 ```bash
 cd backend
-yarn install
-yarn start   # http://localhost:8080
+go run main.go # http://localhost:8080
 ```
 
 ## 🔧 Useful commands
